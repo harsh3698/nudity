@@ -4,6 +4,7 @@ from __future__ import print_function
 import os
 import numpy as np
 import tensorflow as tf
+import requests
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
@@ -20,7 +21,7 @@ class Nudity:
         self.graph = self.load_graph(model_file)
         self.input_operation = self.graph.get_operation_by_name(input_name);
         self.output_operation = self.graph.get_operation_by_name(output_name);
-
+'''
     def read_tensor_from_image_file(self, file_name, input_height=299, input_width=299,
     				input_mean=0, input_std=255):
       input_name = "file_reader"
@@ -45,7 +46,21 @@ class Nudity:
       result = sess.run(normalized)
 
       return result
+'''
+    def read_tensor_from_image_url(url,
+                               input_height=299,
+                               input_width=299,
+                               input_mean=0,
+                               input_std=255):
+        image_reader = tf.image.decode_jpeg(
+            requests.get(url).content, channels=3, name="jpeg_reader")
+        float_caster = tf.cast(image_reader, tf.float32)
+        dims_expander = tf.expand_dims(float_caster, 0)
+        resized = tf.image.resize_bilinear(dims_expander, [input_height, input_width])
+        normalized = tf.divide(tf.subtract(resized, [input_mean]), [input_std])
 
+        sess = tf.Session() 
+        return sess.run(normalized)
     def load_graph(self, model_file):
         graph = tf.Graph()
         graph_def = tf.GraphDef()
@@ -54,7 +69,7 @@ class Nudity:
         with graph.as_default():
             tf.import_graph_def(graph_def)
         return graph
-
+    file_name = url
     def score(self, file_name):
         t = self.read_tensor_from_image_file(file_name,
                                         input_height=self.input_height,
