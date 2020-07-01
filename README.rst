@@ -6,13 +6,13 @@ nudity
 
 About
 -----
-Nudity detection with re-trained Tensorflow MobileNet Model. Accuracy is 92.2% based on my dataset.
+Nudity detection with re-trained Tensorflow MobileNet Model.
 
 Installation
 ------------
 .. code-block:: sh
 
-    $ pip install nudity
+    $ pip install git+https://github.com/harsh3698/nudity.git
 
 
 Requirements
