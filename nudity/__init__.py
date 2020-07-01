@@ -59,9 +59,9 @@ class Nudity:
         dims_expander = tf.expand_dims(float_caster, 0)
         resized = tf.image.resize_bilinear(dims_expander, [input_height, input_width])
         normalized = tf.divide(tf.subtract(resized, [input_mean]), [input_std])
-
         sess = tf.Session() 
         return sess.run(normalized)
+    
     def load_graph(self, model_file):
         graph = tf.Graph()
         graph_def = tf.GraphDef()
@@ -70,9 +70,9 @@ class Nudity:
         with graph.as_default():
             tf.import_graph_def(graph_def)
         return graph
-    file_name = url
-    def score(self, file_name):
-        t = self.read_tensor_from_image_file(file_name,
+    
+    def score(self, url):
+        t = self.read_tensor_from_image_file(url,
                                         input_height=self.input_height,
                                         input_width=self.input_width,
                                         input_mean=self.input_mean,
@@ -83,8 +83,8 @@ class Nudity:
         results = np.squeeze(results)
         return results[1].item();
 
-    def has(self, file_name):
-        return self.score(file_name) >= 0.8
+    def has(self, url):
+        return self.score(url) >= 0.8
 
 def main():
     import argparse
