@@ -72,7 +72,7 @@ class Nudity:
         return graph
     
     def score(self, url):
-        t = self.read_tensor_from_image_file(url,
+        t = self.read_tensor_from_image_url(url,
                                         input_height=self.input_height,
                                         input_width=self.input_width,
                                         input_mean=self.input_mean,
