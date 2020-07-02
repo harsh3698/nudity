@@ -22,7 +22,7 @@ class Nudity:
         self.graph = self.load_graph(model_file)
         self.input_operation = self.graph.get_operation_by_name(input_name);
         self.output_operation = self.graph.get_operation_by_name(output_name);
-'''
+
     def read_tensor_from_image_file(self, file_name, input_height=299, input_width=299,
     				input_mean=0, input_std=255):
       input_name = "file_reader"
@@ -47,7 +47,7 @@ class Nudity:
       result = sess.run(normalized)
 
       return result
-'''
+
     def read_tensor_from_image_url(url,
                                input_height=299,
                                input_width=299,
@@ -71,8 +71,8 @@ class Nudity:
             tf.import_graph_def(graph_def)
         return graph
     
-    def score(self, url):
-        t = self.read_tensor_from_image_url(url,
+    def score(self, file_name):
+        t = self.read_tensor_from_image_file(file_name,                    #instead of 'image_file' and 'file_name' type 'image_url' & 'url' respectively for reading through url  
                                         input_height=self.input_height,
                                         input_width=self.input_width,
                                         input_mean=self.input_mean,
@@ -83,8 +83,8 @@ class Nudity:
         results = np.squeeze(results)
         return results[1].item();
 
-    def has(self, url):
-        return self.score(url) >= 0.8
+    def has(self, file_name):   #'url' for url
+        return self.score(file_name) >= 0.8
 
 def main():
     import argparse
